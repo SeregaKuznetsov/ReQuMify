@@ -1,16 +1,10 @@
-
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Scanner;
-import org.json.JSONObject;
 
 public class ReadingFromFile {
 

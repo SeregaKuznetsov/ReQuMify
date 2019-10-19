@@ -13,10 +13,10 @@ import java.util.Iterator;
 public class Main {
 
     private static double unambiguity = 0;
-    private static double readability = 56;
+    private static double readability = 0;
     private static double singularity = 0;
     private static double unsubjectivity = 0;
-    private static double completeness = 100;
+    private static double completeness = 80;
 
     private static ArrayList<Requirement> requirements = new ArrayList<Requirement>();
     private static SheetsQuickstart updater = new SheetsQuickstart();
@@ -26,9 +26,6 @@ public class Main {
     public static void main(String[] args) {
 
         requirements = ReadingFromFile.getReqs(REQ_PATH);
-
-//        requirements.add(new Requirement(1, "The system may respond within 5 seconds."));
-//        requirements.add(new Requirement(2, "The system may respond within 5 seconds or within 15 easy."));
 
         String url = "https://api.openreq.eu/prs-improving-requirements-quality/check-quality";
         String json = ReadingFromFile.getReqJson(REQ_PATH);
