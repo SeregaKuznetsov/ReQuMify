@@ -5,29 +5,33 @@ import org.json.simple.parser.ParseException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 public class Main {
 
-//    private double unambiguity = 0;
-//    private double readability = 0;
-//    private double singularity = 0;
+    private static double unambiguity = 0;
+    private static double readability = 56;
+    private static double singularity = 0;
+    private static double unsubjectivity = 0;
+    private static double completeness = 100;
+
     private static ArrayList<Requirement> requirements = new ArrayList<Requirement>();
+    private static SheetsQuickstart updater = new SheetsQuickstart();
+    private static Readability read = new Readability();
+    private static final String  REQ_PATH = "C:\\Users\\Sergey\\IdeaProjects\\GQMify\\src\\main\\resources\\reqs.txt";
 
     public static void main(String[] args) {
 
-        requirements.add(new Requirement(1, "The system may respond within 5 seconds."));
-        requirements.add(new Requirement(2, "The system may respond within 5 seconds or within 15 easy."));
+        requirements = ReadingFromFile.getReqs(REQ_PATH);
+
+//        requirements.add(new Requirement(1, "The system may respond within 5 seconds."));
+//        requirements.add(new Requirement(2, "The system may respond within 5 seconds or within 15 easy."));
 
         String url = "https://api.openreq.eu/prs-improving-requirements-quality/check-quality";
-        String json = "{ \"requirements\": [ { \"id\": \"1\", \"text\": \"The system may respond within 5 seconds.\" },{ \"id\": \"2\", \"text\": \"The system may respond within 5 seconds or within 15 easy.\" } ]}";
+        String json = ReadingFromFile.getReqJson(REQ_PATH);
         Document doc = null;
         try {
             doc = Jsoup.connect(url)
@@ -37,7 +41,7 @@ public class Main {
         String response = doc.body().toString().replaceAll("<body>", "").replaceAll("</body>", "");
         System.out.println(response);
 
-        int numberOfReq = 2;
+        int numberOfReq = requirements.size();
 
         // Считываем json
         Object obj = null; // Object obj = new JSONParser().parse(new FileReader("JSONExample.json"));
@@ -57,8 +61,6 @@ public class Main {
             Requirement requirement = requirements.get(i-1);
             while (requirementsItr.hasNext()) {
                 JSONObject test = (JSONObject) requirementsItr.next();
-//                requirement.setText((String) test.get("text"));
-//                requirement.setText((String) test.get("language_construct"));
                 System.out.println("- text: " + test.get("text") + ", language_construct: " + test.get("language_construct"));
 
                 switch ((String) test.get("language_construct")) {
@@ -105,20 +107,38 @@ public class Main {
         for (Requirement requirement : requirements) {
             System.out.println("ID:" + requirement.getId());
             System.out.println("AmbiguetyTerms: " + requirement.getAmbigueTerms());
-            requirement.setUnambiguity(getPercent(requirement.getAmbigueTerms(), countWords(requirement.getText())));
+            requirement.setUnambiguity(getPercent(requirement.getAmbigueTerms(), countWords(requirement.getReqText())));
             System.out.println("connectivityTerms: " + requirement.getConnectiveTerms());
-            requirement.setSingularity(getPercent(requirement.getConnectiveTerms(), countWords(requirement.getText())));
+            requirement.setSingularity(getPercent(requirement.getConnectiveTerms(), countWords(requirement.getReqText())));
             System.out.println("SubjectivityTerms: " + requirement.getSubjectivityTerms());
-            requirement.setUnsubjectivity(getPercent(requirement.getSubjectivityTerms(), countWords(requirement.getText())));
-            System.out.println("Subjectivity: " + requirement.getUnsubjectivity());
+            requirement.setUnsubjectivity(getPercent(requirement.getSubjectivityTerms(), countWords(requirement.getReqText())));
+            System.out.println("Unsubjectivity: " + requirement.getUnsubjectivity());
+            unsubjectivity = (unsubjectivity+= requirement.getUnsubjectivity());
             System.out.println("Singularity: " + requirement.getSingularity());
+            singularity = (singularity+= requirement.getSingularity());
             System.out.println("Unambiguity: " + requirement.getUnambiguity());
+            unambiguity = (unambiguity+= requirement.getUnambiguity());
+//            requirement.setReadability(Readability.getReadability(requirement.getReqText()));
         }
 
+//        System.out.println("Readabilyty: " + requirement.getReadability());
+//        readability = Readability.getReadability(Readability.usingBufferedReader("C:\\Users\\Sergey\\IdeaProjects\\GQMify\\src\\main\\resources\\reqs.txt"));
 
+        System.out.println();
+        System.out.println("Overall unambiguity: " + unambiguity/requirements.size());
+        System.out.println("Overall singularity: " + singularity/requirements.size());
+        System.out.println("Overall unsubjectivity: " + unsubjectivity/requirements.size());
+        System.out.println("Overall readability: " + readability);
+        System.out.println("Overall completeness: " + completeness);
 
-
-
+        try {
+            SheetsQuickstart.loadFirstTable(requirements);
+            SheetsQuickstart.loadParams(unambiguity/requirements.size(), singularity/requirements.size(), unsubjectivity/requirements.size(), readability, completeness);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 

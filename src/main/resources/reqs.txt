@@ -1,0 +1,10 @@
+1.I want to download the list of all users in CSV or Excel
+2.I want to build a support system with live chat, contact form, help and case management
+3.The system must have good usability
+4.The system shall work just like the previous one, but on a new platform
+5.Professor user will log into the system by providing his username, password and other relevant information
+6.Each page of the system will load in an acceptable time frame
+7.The product shall provide status messages at regular intervals not less than every 60 seconds
+8.The product shall switch between displaying and hiding non-printing characters instantaneously
+9.The HTML Parser shall produce an HTML markup error report which allows quick resolution of errors when used by HTML novices
+10.Charge numbers should be validated on-line against the master corporate charge number list, if possible

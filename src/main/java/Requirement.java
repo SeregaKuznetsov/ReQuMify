@@ -15,6 +15,15 @@ public class Requirement {
     private double unambiguity;
     private double unsubjectivity;
     private double singularity;
+    private double readability;
+
+    public double getReadability() {
+        return readability;
+    }
+
+    public void setReadability(double readability) {
+        this.readability = readability;
+    }
 
     public String getReqText() {
         return ReqText;
@@ -50,7 +59,7 @@ public class Requirement {
 
     public Requirement(int id, String text) {
         this.id = id;
-        this.text = text;
+        this.ReqText = text;
     }
 
     public int getAmbigueTerms() {

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.security.GeneralSecurityException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -57,6 +58,67 @@ public class SheetsQuickstart {
         return new AuthorizationCodeInstalledApp(flow, receiver).authorize("user");
     }
 
+    public static void loadParams(double unambiguity, double singularity, double unsubjectivity, double readability, double completeness) throws GeneralSecurityException, IOException {
+        // Build a new authorized API client service.
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        final String spreadsheetId = "1VaZILvZs4XwfeLjU1He65Buj8-vsf0FXACd__8zRlVk";
+        final String range = "B1:B6";
+        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+
+        ValueRange valueRange = new ValueRange();
+        valueRange.setValues(Arrays.asList(
+                Arrays.asList((Object) "Quality %"),
+                Arrays.asList((Object) unambiguity),
+                Arrays.asList((Object) singularity),
+                Arrays.asList((Object) unsubjectivity),
+                Arrays.asList((Object) readability),
+                Arrays.asList((Object) completeness)));
+
+        try {
+            service.spreadsheets().values().update(spreadsheetId, range, valueRange)
+                    .setValueInputOption("RAW")
+                    .execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void loadFirstTable(ArrayList<Requirement> requirements) throws GeneralSecurityException, IOException {
+        // Build a new authorized API client service.
+        final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        final String spreadsheetId = "1J7drbSPD6DhXadNkk2UDMYsVd-PUt74gVtSfxMqj2tc";
+        final String range = "A2:D30";
+        Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
+                .setApplicationName(APPLICATION_NAME)
+                .build();
+
+        List<List<Object>> list = new ArrayList<>();
+
+        for (Requirement requirement : requirements) {
+            List<Object> row = new ArrayList<>();
+            row.add(requirement.getId());
+            row.add(requirement.getAmbigueTerms());
+            row.add(requirement.getConnectiveTerms());
+            row.add(requirement.getSubjectivityTerms());
+            list.add(row);
+        }
+
+        ValueRange valueRange = new ValueRange();
+        valueRange.setValues(list);
+
+        try {
+            service.spreadsheets().values().update(spreadsheetId, range, valueRange)
+                    .setValueInputOption("RAW")
+                    .execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     /**
      * Prints the names and majors of students in a sample spreadsheet:
      * https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
@@ -65,7 +127,7 @@ public class SheetsQuickstart {
         // Build a new authorized API client service.
         final NetHttpTransport HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
         final String spreadsheetId = "1VaZILvZs4XwfeLjU1He65Buj8-vsf0FXACd__8zRlVk";
-        final String range = "B6";
+        final String range = "B1:B6";
         Sheets service = new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, getCredentials(HTTP_TRANSPORT))
                 .setApplicationName(APPLICATION_NAME)
                 .build();
@@ -73,35 +135,20 @@ public class SheetsQuickstart {
         Object a1 = new Object();
         a1 = "Values";
         Object b1 = new Object();
-        b1 = "66";
-//
-//        Object a2 = new Object();
-//        a2 = "TEST Row 2 Column A";
-//        Object b2 = new Object();
-//        b2 = "TEST Row 2 Column B";
+        a1 = "";
+        b1 = "56";
 
         ValueRange valueRange = new ValueRange();
-        valueRange.setValues(
-                Arrays.asList(Arrays.asList(a1, b1)));
+        valueRange.setValues(Arrays.asList(
+                Arrays.asList(a1),
+                Arrays.asList(b1),
+                Arrays.asList(b1),
+                Arrays.asList(b1),
+                Arrays.asList(b1),
+                Arrays.asList(b1)));
 
-        service.spreadsheets().values().update(spreadsheetId, "B6", valueRange)
+        service.spreadsheets().values().update(spreadsheetId, range, valueRange)
                 .setValueInputOption("RAW")
                 .execute();
-
-
-//        ValueRange response = service.spreadsheets().values()
-//                .get(spreadsheetId, range)
-//                .execute();
-//        List<List<Object>> values = response.getValues();
-//        if (values == null || values.isEmpty()) {
-//            System.out.println("No data found.");
-//        } else {
-//            System.out.println("Name, Major");
-//            for (List row : values) {
-//                // Print columns A and E, which correspond to indices 0 and 4.
-//                System.out.printf("%s\n", row.get(0));
-//            }
-//        }
-
     }
 }
