@@ -118,11 +118,9 @@ public class Main {
             singularity = (singularity+= requirement.getSingularity());
             System.out.println("Unambiguity: " + requirement.getUnambiguity());
             unambiguity = (unambiguity+= requirement.getUnambiguity());
-//            requirement.setReadability(Readability.getReadability(requirement.getReqText()));
         }
 
-//        System.out.println("Readabilyty: " + requirement.getReadability());
-//        readability = Readability.getReadability(Readability.usingBufferedReader("C:\\Users\\Sergey\\IdeaProjects\\GQMify\\src\\main\\resources\\reqs.txt"));
+        readability = read.oldReadability(requirements);
 
         System.out.println();
         System.out.println("Overall unambiguity: " + unambiguity/requirements.size());

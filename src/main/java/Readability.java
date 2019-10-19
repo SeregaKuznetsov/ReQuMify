@@ -34,16 +34,14 @@ public class Readability {
 	}
 
 	public double oldReadability(ArrayList<Requirement> requirements) {
-		double value = 0;
 		double L = getL(path);
 		double S = getS(path, requirements);
 		return (20 - (0.0588 * L - 0.296 * S - 15.8))/10 * 100;
 	}
 
 	private double getS(String path, ArrayList<Requirement> requirements) {
-		int numberOfSentences = usingBufferedReader(path).split("[!?.:]+").length - requirements.size();
-
-		return 0;
+		int numberOfSentences = usingBufferedReader(path).split("[!?.:]+").length;
+		return numberOfSentences/(countWords(usingBufferedReader(path))/ 100.0);
 	}
 
 	private double getL(String path) {
@@ -58,7 +56,7 @@ public class Readability {
 			if (Character.isLetter(str.charAt(i)))
 				counter++;
 		}
-		System.out.println(counter + " letters.");
+//		System.out.println(counter + " letters.");
 		return counter;
 	}
 
@@ -67,20 +65,22 @@ public class Readability {
 	}
 
 	public static void main(String[] args) {
-		String url = "https://ipeirotis-readability-metrics.p.rapidapi.com/getReadabilityMetrics";
-//		String text = usingBufferedReader("src/sample");
-		String text = "";
-		HashMap<String, String> headers = new HashMap<>();
-		headers.put("x-rapidapi-host", "ipeirotis-readability-metrics.p.rapidapi.com");
-		headers.put("x-rapidapi-key", "081ec9f8d2msh86b15d1b25a25e7p1d8f59jsn435fd0e32e06");
-		headers.put("content-type", "application/x-www-form-urlencoded");
-		Document doc = null;
-		try {
-			doc = Jsoup.connect(url).ignoreContentType(true).headers(headers).data("text", usingBufferedReader(path)).validateTLSCertificates(false).post();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(doc);
+
+
+//		String url = "https://ipeirotis-readability-metrics.p.rapidapi.com/getReadabilityMetrics";
+////		String text = usingBufferedReader("src/sample");
+//		String text = "";
+//		HashMap<String, String> headers = new HashMap<>();
+//		headers.put("x-rapidapi-host", "ipeirotis-readability-metrics.p.rapidapi.com");
+//		headers.put("x-rapidapi-key", "081ec9f8d2msh86b15d1b25a25e7p1d8f59jsn435fd0e32e06");
+//		headers.put("content-type", "application/x-www-form-urlencoded");
+//		Document doc = null;
+//		try {
+//			doc = Jsoup.connect(url).ignoreContentType(true).headers(headers).data("text", usingBufferedReader(path)).validateTLSCertificates(false).post();
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		}
+//		System.out.println(doc);
 
 //		OkHttpClient client = new OkHttpClient();
 //
